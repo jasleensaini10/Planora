@@ -25,6 +25,7 @@ import { useTrips } from '../context/TripsContext';
 import { attractionById } from '../data/attractions';
 import { findDestination } from '../data/destinations';
 import { autoPlan, dayTotals, formatMinutes } from '../lib/planner';
+import { orderByNearest, formatKm } from '../lib/geo';
 import { recommend } from '../lib/recommend';
 import { nanoid } from 'nanoid';
 import type { Activity, Trip } from '../types';
@@ -114,7 +115,7 @@ function DayColumn({
   dayIndex: number | null;
   label: string;
   activities: Activity[];
-  totals?: { count: number; minutes: number };
+  totals?: { count: number; minutes: number; km: number };
   onRemove: (id: string) => void;
   droppableId: string;
   highlight?: boolean;
@@ -132,6 +133,7 @@ function DayColumn({
         {totals && (
           <span className="text-xs text-slate-500">
             {totals.count} · {formatMinutes(totals.minutes)}
+            {totals.km > 0 && <> · <span className="text-indigo-600 font-medium">{formatKm(totals.km)}</span></>}
           </span>
         )}
       </div>
@@ -244,11 +246,18 @@ export default function ItineraryPage() {
     ? trip.activities.find((a) => a.id === activeDragId)
     : null;
 
-  // Map view data
+  // Map view data — respect saved order; nearest-neighbour fallback for any missing order.
   const selectedDayActivities = activitiesByDay.get(selectedDay) ?? [];
-  const mapAttractions = selectedDayActivities
+  const rawMapAttractions = selectedDayActivities
     .map((a) => attractionById(a.attractionId))
     .filter((a): a is NonNullable<typeof a> => !!a);
+  const mapAttractions = useMemo(() => {
+    if (rawMapAttractions.length <= 2) return rawMapAttractions;
+    // Start from the first (order=0) to preserve user intent, re-order the rest by nearest-neighbour.
+    const [first, ...rest] = rawMapAttractions;
+    const { ordered } = orderByNearest(rest, first);
+    return [first, ...ordered];
+  }, [rawMapAttractions]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

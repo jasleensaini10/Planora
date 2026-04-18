@@ -9,18 +9,37 @@ export default function HomePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <section className="card p-8 md:p-12 bg-gradient-to-br from-brand-600 to-brand-800 text-white border-0 shadow-lg">
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Plan your next adventure.</h1>
-        <p className="mt-3 text-brand-100 max-w-xl">
-          Pick a destination, tell us what you love, and get a balanced day-by-day itinerary in seconds —
-          or drag and drop your own.
-        </p>
-        <Link to="/new" className="btn bg-white text-brand-700 hover:bg-brand-50 mt-6">
-          <Plus size={16} /> Create a trip
-        </Link>
+      <section className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-soft bg-gradient-to-br from-brand-600 via-indigo-600 to-purple-700 text-white p-8 md:p-14">
+        <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-indigo-300/20 rounded-full blur-3xl" />
+        <div className="relative">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium text-white/90">
+            ✈️  Plan smarter, travel better
+          </span>
+          <h1 className="mt-4 text-4xl md:text-6xl font-display font-extrabold tracking-tight leading-[1.05]">
+            Your next adventure,<br />
+            <span className="bg-gradient-to-r from-amber-200 to-pink-200 bg-clip-text text-transparent">
+              perfectly planned.
+            </span>
+          </h1>
+          <p className="mt-4 text-brand-50/90 max-w-xl text-base md:text-lg">
+            Tell Planora where you're going and what you love. We'll craft a day-by-day
+            itinerary with geographically smart routes — or build it yourself, drag-and-drop.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link to="/new" className="btn bg-white text-brand-700 hover:bg-brand-50 shadow-lg shadow-indigo-900/30">
+              <Plus size={16} /> Create a trip
+            </Link>
+            {trips.length > 0 && (
+              <a href="#your-trips" className="btn bg-white/10 text-white hover:bg-white/20 border border-white/20">
+                View my trips
+              </a>
+            )}
+          </div>
+        </div>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-10" id="your-trips">
         <div className="flex items-baseline justify-between mb-4">
           <h2 className="text-xl font-semibold">Your trips</h2>
           <span className="text-sm text-slate-500">{trips.length} saved</span>
