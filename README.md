@@ -1,4 +1,4 @@
-# Wanderly — Vacation Planner
+# Planora — Vacation Planner
 
 A React + Vite + Tailwind single-page app for planning multi-day trips with preference-based attraction recommendations, an auto-balanced itinerary generator, drag-and-drop day planning, and an optional Leaflet map view. Trips are saved to `localStorage`.
 

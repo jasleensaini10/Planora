@@ -1,10 +1,19 @@
 import type { Trip } from '../types';
 
-const KEY = 'wanderly.trips.v1';
+// Legacy key retained for backwards compatibility during rebrand.
+const KEY = 'planora.trips.v1';
+const LEGACY_KEY = 'wanderly.trips.v1';
 
 export function loadTrips(): Trip[] {
   try {
-    const raw = localStorage.getItem(KEY);
+    let raw = localStorage.getItem(KEY);
+    if (!raw) {
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        localStorage.setItem(KEY, legacy);
+        raw = legacy;
+      }
+    }
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
